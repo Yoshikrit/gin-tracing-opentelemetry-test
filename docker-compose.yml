@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  jaegertest-service:
+    image: yoshikrit/jaeger-test:latest
+    container_name: jaegertest-service
+    ports:
+      - 8081:8081
+    depends_on:
+      - jaeger
+    restart: always
+
+  jaeger:
+    image: rancher/jaegertracing-all-in-one:1.20.0
+    container_name: jaeger_con
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+    ports:
+      - "16686:16686"
+      - "6831:6831/udp"
+      - "14268:14268"
+    volumes:
+      - jaeger_data:/data
+      - jaeger_tmp:/tmp
+    restart: always
+
+volumes:
+  jaeger_data:
+    name: jaeger_data
+  jaeger_tmp:
+    name: jaeger_tmp
